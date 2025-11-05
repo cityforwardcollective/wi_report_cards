@@ -16,7 +16,7 @@ library(glue)
 
 base <- "https://cityforwardcollective.github.io/wi_report_cards/report_cards"
 
-full_table <- read_rds("../data/full_table.rda")
+full_table <- read_rds("data/full_table.rda")
 
 this_theme <- function() {
   reactableTheme(
@@ -44,12 +44,20 @@ col2hex <- function(x, alpha = FALSE) {
   do.call(rgb, args)
 }
 
+# full_table |> 
+#   mutate(district = ifelse(broad_agency_type == "Private", glue("{district} Private"), district)) |> 
+#   transmute(this = glue(
+#     '{base}/{district}/{school_name} {school_year}.pdf'
+#   ))
+
 
 
 full_table |> 
-  mutate("Report Card Link" = glue(
+  mutate(
+    district = ifelse(broad_agency_type == "Private", glue("{district} Private"), district),
+    "Report Card Link" = glue(
     "<a href='{base}/{district}/{school_name}.pdf'",
-                            "target='_blank'>{school_name}</a>"
+                            "target='_blank'>{school_name} {school_year}</a>"
                             )) |> 
   select("School Year" = school_year,
          District = district,
