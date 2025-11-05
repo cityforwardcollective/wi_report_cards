@@ -56,7 +56,7 @@ full_table |>
   mutate(
     district = ifelse(broad_agency_type == "Private", glue("{district} Private"), district),
     "Report Card Link" = glue(
-    "<a href='{base}/{district}/{school_name}.pdf'",
+    "<a href='{base}/{district}/{school_name} {school_year}.pdf'",
                             "target='_blank'>{school_name} {school_year}</a>"
                             )) |> 
   select("School Year" = school_year,
