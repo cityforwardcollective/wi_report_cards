@@ -1,0 +1,12 @@
+# delete public school files
+
+# Get all directories in report_cards that do NOT end with "Private"
+non_private_dirs <- list.dirs(
+  "report_cards",
+  full.names = TRUE,
+  recursive = FALSE
+) |>
+  str_subset("Private$", negate = TRUE)
+
+# Delete them
+unlink(non_private_dirs, recursive = TRUE)

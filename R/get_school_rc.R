@@ -71,7 +71,11 @@ get_urls_and_downloads <- function(
         url = glue::glue("https://apps6.dpi.wi.gov{url_link}")
       ) |>
         filter(!is.na(span_html)) |>
-        left_join(school_id, by = c("span_html" = "school_name"))
+        left_join(
+          school_id |>
+            filter(district_agency_key == this$DistrictAgencyKey),
+          by = c("span_html" = "school_name")
+        )
     })
 
     if (download_reports) {
@@ -96,6 +100,7 @@ get_urls_and_downloads <- function(
   })
 }
 
+# can set inds to interate over with first argument
 report_urls <- get_urls_and_downloads(download_reports = FALSE)
 
 report_urls |>
