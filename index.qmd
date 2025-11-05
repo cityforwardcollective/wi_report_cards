@@ -71,11 +71,11 @@ full_table |>
     ),
     "Report Card Link" = case_when(accurate_agency_type == "Private" ~ glue(
     "<a href='{base}/{district}/{school_name} {report_card_type} School Report Card {school_year}.pdf'",
-                            "target='_blank'>{school_name}</a>"
+                            "target='_blank'>{report_card_type}</a>"
                             ),
                             TRUE ~ glue(
     "<a href='{base}/{district}/{school_name} School Report Card {school_year}.pdf'",
-                            "target='_blank'>{school_name}</a>"
+                            "target='_blank'>{report_card_type}</a>"
                             ))) |> 
   select("School Year" = school_year,
          District = district,
