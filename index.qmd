@@ -50,25 +50,44 @@ col2hex <- function(x, alpha = FALSE) {
 #     '{base}/{district}/{school_name} {school_year}.pdf'
 #   ))
 
+charter <- c(
+  "2r/2x Charter",
+  "Non-Instrumentality Charter"
+)
+trad <- c(
+  "Traditional Public",
+  "Instrumentality Charter"
+)
 
 
 full_table |> 
   mutate(
     district = ifelse(broad_agency_type == "Private", glue("{district} Private"), district),
-    "Report Card Link" = glue(
-    "<a href='{base}/{district}/{school_name} {school_year}.pdf'",
-                            "target='_blank'>{school_name} {school_year}</a>"
-                            )) |> 
+    report_card_type = ifelse(broad_agency_type != "Private", "All Students", report_card_type),
+    sector = case_when(
+      accurate_agency_type %in% charter ~ "Public Charter School",
+      accurate_agency_type %in% trad ~ "Traditional Public School",
+      TRUE ~ glue("{accurate_agency_type} School")
+    ),
+    "Report Card Link" = case_when(accurate_agency_type == "Private" ~ glue(
+    "<a href='{base}/{district}/{school_name} {report_card_type} School Report Card {school_year}.pdf'",
+                            "target='_blank'>{school_name}</a>"
+                            ),
+                            TRUE ~ glue(
+    "<a href='{base}/{district}/{school_name} School Report Card {school_year}.pdf'",
+                            "target='_blank'>{school_name}</a>"
+                            ))) |> 
   select("School Year" = school_year,
          District = district,
          School = school_name,
-         `Report Card Link`) |> 
+         Sector = sector,
+         `Report Card Link`) |>
 
 
 
   reactable(elementId = "myTable", columns = list(
-    District = colDef(minWidth = 50),
-    Incumbent = colDef(
+    District = colDef(),
+    `Report Card Type` = colDef(
       style = function(value) {
         if (value == "Vacant") {
           list(color = glue("{col2hex('grey60')}"), fontStyle = "italic")
@@ -78,13 +97,14 @@ full_table |>
     ),
     `Report Card Link` = colDef(html = TRUE, 
                            style = list(fontSize = ".75rem"),
-                           minWidth = 125)
+                           minWidth = 125),
+    Sector = colDef()
   ), 
   searchable = TRUE, 
   highlight = TRUE, 
   showPageSizeOptions = TRUE, 
   language = reactableLang(
-    searchPlaceholder = "Search incumbent, elected body, or district"
+    searchPlaceholder = "Search district, school, or sector"
     ),
   defaultColDef = colDef(align = "center"),
   theme = this_theme())
