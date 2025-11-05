@@ -1,0 +1,88 @@
+---
+format: 
+  html:
+    echo: false
+    message: false
+    error: false
+    warning: false
+    backgroundcolor: transparent
+---
+
+```{r message=FALSE}
+library(reactable)
+library(tidyverse)
+library(sf)
+library(glue)
+
+base <- "https://cityforwardcollective.github.io/wi_report_cards/report_cards"
+
+full_table <- read_rds("../data/full_table.rda")
+
+this_theme <- function() {
+  reactableTheme(
+    searchInputStyle = list(
+      width = "100%"
+    ),
+    style = list(
+      padding = "10px",
+      minHeight = "650"
+    )
+  )
+}
+
+vacants <- function(value) {
+
+  if (value == "Vacant") {
+    args <- list(value, style = glue("color: {'grey90'}; font-weight: 700"))
+  } 
+  do.call(span, args)
+}
+
+col2hex <- function(x, alpha = FALSE) {
+  args <- as.data.frame(t(col2rgb(x, alpha = alpha)))
+  args <- c(args, list(names = x, maxColorValue = 255))
+  do.call(rgb, args)
+}
+
+
+
+full_table |> 
+  mutate("Report Card Link" = glue(
+    "<a href='{base}/{district}/{school_name}.pdf'",
+                            "target='_blank'>{school_name}</a>"
+                            )) |> 
+  select("School Year" = school_year,
+         District = district,
+         School = school_name,
+         `Report Card Link`) |> 
+
+
+
+  reactable(elementId = "myTable", columns = list(
+    District = colDef(minWidth = 50),
+    Incumbent = colDef(
+      style = function(value) {
+        if (value == "Vacant") {
+          list(color = glue("{col2hex('grey60')}"), fontStyle = "italic")
+        } 
+        
+      }
+    ),
+    `Report Card Link` = colDef(html = TRUE, 
+                           style = list(fontSize = ".75rem"),
+                           minWidth = 125)
+  ), 
+  searchable = TRUE, 
+  highlight = TRUE, 
+  showPageSizeOptions = TRUE, 
+  language = reactableLang(
+    searchPlaceholder = "Search incumbent, elected body, or district"
+    ),
+  defaultColDef = colDef(align = "center"),
+  theme = this_theme())
+
+```
+
+
+
+
