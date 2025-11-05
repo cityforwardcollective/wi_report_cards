@@ -28,7 +28,7 @@ dat <- fromJSON(txt_clean, flatten = TRUE)
 # often this endpoint returns an array of district rows, so:
 df <- as_tibble(dat)
 
-saveRDS(df, "districts.rda")
+saveRDS(df, "data/districts.rda")
 
 print(df)
 

@@ -97,4 +97,7 @@ get_urls_and_downloads <- function(
 }
 
 report_urls <- get_urls_and_downloads(download_reports = FALSE)
-saveRDS(report_urls, "data/")
+
+report_urls |>
+  rename(download_url = url) |>
+  saveRDS("data/public_schools_table.rda")
