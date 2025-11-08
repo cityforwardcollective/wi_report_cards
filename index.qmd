@@ -1,5 +1,4 @@
 ---
-title: Wisconsin School Report Cards
 format: 
   html:
     echo: false
@@ -7,7 +6,6 @@ format:
     error: false
     warning: false
     backgroundcolor: transparent
-    title-blocker-banner: false
 ---
 
 ```{r message=FALSE}
