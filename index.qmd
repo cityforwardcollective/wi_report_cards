@@ -26,7 +26,11 @@ this_theme <- function() {
     ),
     style = list(
       padding = "10px",
-      minHeight = "650"
+      minHeight = "650",
+      fontFamily = "Open Sans"
+    ),
+    headerStyle = list(
+      fontFamily = "Montserrat"
     )
   )
 }
@@ -62,22 +66,30 @@ trad <- c(
 
 
 full_table |> 
+  arrange(district, school_name) |> 
   mutate(
     district = ifelse(broad_agency_type == "Private", glue("{district} Private"), district),
-    report_card_type = ifelse(broad_agency_type != "Private", "All Students", report_card_type),
+    # report_card_type = ifelse(broad_agency_type != "Private", "All Students", report_card_type),
     sector = case_when(
       accurate_agency_type %in% charter ~ "Public Charter School",
       accurate_agency_type %in% trad ~ "Traditional Public School",
       TRUE ~ glue("{accurate_agency_type} School")
     ),
-    "Report Card Link" = case_when(accurate_agency_type == "Private" ~ glue(
-    "<a href='{base}/{district}/{school_name} {report_card_type} School Report Card {school_year}.pdf'",
-                            "target='_blank'>{report_card_type}</a>"
+    "Report Card Link" = case_when(
+      rc_n == "both" ~ glue(
+    "<a href='{base}/{district}/{school_name} All Students School Report Card {school_year}.pdf' target='_blank'>All Students</a><br>",
+    "<a href='{base}/{district}/{school_name} Choice Students School Report Card {school_year}.pdf'",
+          " target='_blank'>Choice Students</a>"
                             ),
-                            TRUE ~ glue(
-    "<a href='{base}/{district}/{school_name} School Report Card {school_year}.pdf'",
-                            "target='_blank'>{report_card_type}</a>"
-                            ))) |> 
+                rc_n == "all_only" ~ glue(
+                      "<a href='{base}/{district}/{school_name} School Report Card {school_year}.pdf'",
+                            "target='_blank'>All Students</a>",
+                ),
+                rc_n == "choice_only" ~ glue(
+                      "<a href='{base}/{district}/{school_name} Choice Students School Report Card {school_year}.pdf'",
+                            "target='_blank'>Choice Students</a>"
+                ),
+                            TRUE ~ "ERROR")) |> 
   select("School Year" = school_year,
          District = district,
          School = school_name,
@@ -101,7 +113,7 @@ full_table |>
                            minWidth = 125),
     Sector = colDef()
   ), 
-  searchable = TRUE, 
+  searchable = TRUE,
   highlight = TRUE, 
   showPageSizeOptions = TRUE, 
   language = reactableLang(
