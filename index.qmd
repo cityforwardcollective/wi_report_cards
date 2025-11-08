@@ -115,7 +115,8 @@ full_table |>
   ), 
   searchable = TRUE,
   highlight = TRUE, 
-  showPageSizeOptions = FALSE, 
+  showPageSizeOptions = FALSE,
+  compact = TRUE,
   language = reactableLang(
     searchPlaceholder = "Search district, school, or sector"
     ),
