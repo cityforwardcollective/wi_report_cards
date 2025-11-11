@@ -76,16 +76,16 @@ full_table |>
     ),
     "Report Card Link" = case_when(
       rc_n == "both" ~ glue(
-    "<a href='{base}/{district}/{school_name} All Students School Report Card {school_year}.pdf' target='_blank'>All Students</a><br>",
-    "<a href='{base}/{district}/{school_name} Choice Students School Report Card {school_year}.pdf'",
-          " target='_blank'>Choice Students</a>"
+        # use \" because some linkes have school name with apostrophe
+        # e.g. Saint Paul's
+    "<a href=\"{`All Students`}\" target='_blank'>All Students</a><br>",
+    "<a href=\"{`Choice Students`}\" target='_blank'>Choice Students</a>"
                             ),
                 rc_n == "all_only" ~ glue(
-                      "<a href='{base}/{district}/{school_name} School Report Card {school_year}.pdf'",
-                            "target='_blank'>All Students</a>",
+                      "<a href=\"{`All Students`}\" target='_blank'>All Students</a>",
                 ),
                 rc_n == "choice_only" ~ glue(
-                      "<a href='{base}/{district}/{school_name} Choice Students School Report Card {school_year}.pdf'",
+                      "<a href=\"{`Choice Students`}\"",
                             "target='_blank'>Choice Students</a>"
                 ),
                             TRUE ~ "ERROR")) |> 

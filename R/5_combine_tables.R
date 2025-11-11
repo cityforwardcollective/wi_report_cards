@@ -8,7 +8,7 @@ base <- "https://cityforwardcollective.github.io/wi_report_cards/report_cards"
 
 
 full_table <- private |>
-  select(
+  transmute(
     year,
     district,
     school_name = span_html,
@@ -54,6 +54,12 @@ with_codes <- left_join(
 ) |>
   unique() |>
   mutate(
+    district = ifelse(
+      broad_agency_type == "Private",
+      glue("{district} Private"),
+      district
+    ),
+
     link = case_when(
       accurate_agency_type == "Private" ~ glue(
         "{base}/{district}/{school_name} ",
