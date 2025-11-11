@@ -89,12 +89,13 @@ full_table |>
                             "target='_blank'>Choice Students</a>"
                 ),
                             TRUE ~ "ERROR")) |> 
+                              ungroup() |> 
+        arrange(district, school_name) |> 
   select("School Year" = school_year,
          District = district,
          School = school_name,
          Sector = sector,
          `Report Card Link`) |>
-
 
 
   reactable(elementId = "myTable", columns = list(
