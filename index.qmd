@@ -67,7 +67,7 @@ trad <- c(
 full_table |> 
   arrange(district, school_name) |> 
   mutate(
-    district = ifelse(broad_agency_type == "Private", glue("{district} Private"), district),
+    district = ifelse(broad_agency_type == "Private", glue("{district}"), district),
     # report_card_type = ifelse(broad_agency_type != "Private", "All Students", report_card_type),
     sector = case_when(
       accurate_agency_type %in% charter ~ "Public Charter School",
