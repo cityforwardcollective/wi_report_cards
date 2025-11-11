@@ -23,7 +23,7 @@ full_table <- private |>
         district,
         school_name = span_html,
         school_key = public_school_key,
-        district_key = district_agency_key,
+        # district_key = district_agency_key,
         download_url
       )
   ) |>
@@ -71,7 +71,7 @@ with_codes <- left_join(
       district,
       school_name,
       school_key,
-      district_key,
+      # district_key,
       dpi_true_id,
       accurate_agency_type,
       broad_agency_type
