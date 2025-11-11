@@ -27,7 +27,14 @@ full_table <- private |>
         download_url
       )
   ) |>
-  mutate(school_year = glue("{year-1}-{year-2000}")) |>
+  mutate(
+    school_year = glue("{year-1}-{year-2000}"),
+    school_name = str_replace_all(
+      school_name,
+      "/",
+      "-"
+    )
+  ) |>
   select(school_year, everything()) |>
   select(-year)
 
